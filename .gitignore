@@ -6,6 +6,10 @@ Session.vim
 .netrwhist
 *~
 
+### data
+data/*
+
+
 ### SublimeText ###
 # cache files for sublime text
 *.tmlanguage.cache
