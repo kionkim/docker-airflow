@@ -8,7 +8,8 @@ Session.vim
 
 ### data
 data/*
-
+tmp/
+data/
 
 ### SublimeText ###
 # cache files for sublime text
