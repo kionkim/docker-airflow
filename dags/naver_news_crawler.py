@@ -21,20 +21,25 @@ default_args = {
 }
 
 dag = DAG('naver_news_crawler', default_args=default_args,
-            schedule_interval='20 18 * * *',
+            schedule_interval='50 20 * * *',
             start_date=datetime(2020, 6, 1),
             catchup=False,
             description='Crawl and post-process naver news',
         )
 
-
-# pip install git+https://kionkim:rlarldhs!1@github.com/kionkim/ginaleo.git
-
-
-t1 = BashOperator(task_id="install_package", bash_command="./naver_financial_news_crawl/news_crawl_script.sh", dag=dag)
+t1 = BashOperator(task_id="refresh_package", 
+                  bash_command="./naver_financial_news_crawl/refresh_package.sh", 
+                  dag=dag)
 
 
-t2 = BashOperator(task_id="news_crawl", bash_command="python /usr/local/airflow/dags/naver_financial_news_crawl/script.py", dag=dag)
+t2 = BashOperator(task_id="news_crawl", 
+                  bash_command="python /usr/local/airflow/dags/naver_financial_news_crawl/crawl_news.py", 
+                  dag=dag)
+
+
+t3 = BashOperator(task_id="create_sentiment", 
+                  bash_command="python /usr/local/airflow/dags/naver_financial_news_crawl/create_sentiment.py", 
+                  dag=dag)
 
 # crawling = PythonOperator(
 #     task_id='news_crawl',
@@ -43,7 +48,7 @@ t2 = BashOperator(task_id="news_crawl", bash_command="python /usr/local/airflow/
 
 
 # crawling
-t1 >> t2
+t1 >> t2 >> t3
 # hello_operator = PythonOperator(task_id='hello_task', python_callable=print_hello, dag=dag)
 
 # dummy_operator >> hello_operator
